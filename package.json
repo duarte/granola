@@ -1,0 +1,20 @@
+{
+  "name": "granola-cli",
+  "version": "1.0.0",
+  "description": "CLI for Granola meeting notes — designed for LLM consumption",
+  "type": "module",
+  "bin": {
+    "granola": "src/index.ts"
+  },
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "build": "bun build --compile src/index.ts --outfile granola",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.4"
+  }
+}
