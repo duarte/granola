@@ -42,6 +42,8 @@ export function registerListCommand(program: Command) {
         created_at: m.created_at,
         attendees: m.attendees.map((a) => a.name),
         has_notes: m.notes_markdown.length > 0,
+        has_calendar_event: Boolean(m.calendar_event),
+        needs_notes: Boolean(m.calendar_event) && m.notes_markdown.length === 0,
         debriefed: isDebriefed(m.id),
       }));
 

@@ -20,6 +20,13 @@ export function registerShowCommand(program: Command) {
         );
       }
 
+      const context = {
+        id: meeting.id,
+        title: meeting.title,
+        created_at: meeting.created_at,
+        attendees: meeting.attendees,
+      };
+
       if (opts.transcript) {
         if (!meeting.transcript || meeting.transcript.length === 0) {
           output({ transcript: null, message: "No transcript available" });
@@ -30,7 +37,7 @@ export function registerShowCommand(program: Command) {
             console.log(`[${u.source}] ${u.text}`);
           }
         } else {
-          output(meeting.transcript);
+          output({ ...context, transcript: meeting.transcript });
         }
         return;
       }
@@ -40,6 +47,7 @@ export function registerShowCommand(program: Command) {
           console.log(meeting.notes_markdown || "(no notes)");
         } else {
           output({
+            ...context,
             notes_markdown: meeting.notes_markdown,
             notes_plain: meeting.notes_plain,
           });
@@ -49,11 +57,8 @@ export function registerShowCommand(program: Command) {
 
       // Full detail
       const result = {
-        id: meeting.id,
-        title: meeting.title,
-        created_at: meeting.created_at,
+        ...context,
         updated_at: meeting.updated_at,
-        attendees: meeting.attendees,
         debriefed: isDebriefed(meeting.id),
         calendar_event: meeting.calendar_event
           ? {
