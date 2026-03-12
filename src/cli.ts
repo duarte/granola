@@ -1,8 +1,7 @@
 import { Command } from "commander";
 import { registerListCommand } from "./commands/list.js";
 import { registerShowCommand } from "./commands/show.js";
-import { registerStatusCommand } from "./commands/status.js";
-import { registerDebriefCommand } from "./commands/debrief.js";
+import { registerHelpCommand } from "./commands/help.js";
 
 export function createProgram(): Command {
   const program = new Command();
@@ -10,7 +9,7 @@ export function createProgram(): Command {
   program
     .name("granola")
     .description("CLI for Granola meeting notes — designed for LLM consumption")
-    .version("1.0.0", "-v, --version")
+    .version("1.1.0", "-v, --version")
     .option("--json", "JSON output (default)")
     .option("--pretty", "Pretty-printed JSON")
     .option("--human", "Human-readable output")
@@ -18,8 +17,7 @@ export function createProgram(): Command {
 
   registerListCommand(program);
   registerShowCommand(program);
-  registerStatusCommand(program);
-  registerDebriefCommand(program);
+  registerHelpCommand(program);
 
   program.action(() => {
     program.help();

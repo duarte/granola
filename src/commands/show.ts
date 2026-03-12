@@ -1,7 +1,5 @@
 import { Command } from "commander";
 import { getMeeting } from "../core/cache.js";
-import { prosemirrorToMarkdown } from "../core/prosemirror.js";
-import { isDebriefed } from "../core/state.js";
 import { output, getMode } from "../output/format.js";
 import { exitWithError, makeError, EXIT_CODES } from "../output/errors.js";
 
@@ -59,7 +57,6 @@ export function registerShowCommand(program: Command) {
       const result = {
         ...context,
         updated_at: meeting.updated_at,
-        debriefed: isDebriefed(meeting.id),
         calendar_event: meeting.calendar_event
           ? {
               summary: meeting.calendar_event.summary,
