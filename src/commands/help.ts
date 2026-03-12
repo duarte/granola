@@ -23,7 +23,7 @@ COMMANDS
   granola help                 Show this help
 
 DATA SOURCE
-  Reads ~/Library/Application Support/Granola/cache-v4.json directly.
+  Reads ~/Library/Application Support/Granola/cache-vN.json (highest version found).
   No API calls, no auth needed. Data is as fresh as the last Granola sync.
 
 OUTPUT FORMAT

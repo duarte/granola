@@ -13,6 +13,12 @@ export function registerListCommand(program: Command) {
       const now = Date.now();
       const defaultCutoff = now - 72 * 60 * 60 * 1000;
 
+      // Use calendar event start time if available, otherwise fall back to created_at
+      const meetingTime = (m: (typeof meetings)[0]): number =>
+        m.calendar_event?.start?.dateTime
+          ? new Date(m.calendar_event.start.dateTime).getTime()
+          : new Date(m.created_at).getTime();
+
       let filtered = meetings;
 
       if (!opts.all) {
@@ -25,15 +31,16 @@ export function registerListCommand(program: Command) {
         } else {
           cutoff = defaultCutoff;
         }
-        filtered = filtered.filter(
-          (m) => new Date(m.created_at).getTime() >= cutoff
-        );
+        filtered = filtered.filter((m) => meetingTime(m) >= cutoff);
       }
+
+      // Sort by meeting time, newest first
+      filtered.sort((a, b) => meetingTime(b) - meetingTime(a));
 
       const result = filtered.map((m) => ({
         id: m.id,
         title: m.title,
-        created_at: m.created_at,
+        time: m.calendar_event?.start?.dateTime || m.created_at,
         attendees: m.attendees.map((a) => a.name),
         has_notes: m.notes_markdown.length > 0,
         has_calendar_event: Boolean(m.calendar_event),

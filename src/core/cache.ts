@@ -77,23 +77,26 @@ interface CacheState {
 
 // --- Cache reading ---
 
-const CACHE_PATHS = [
-  join(
-    homedir(),
-    "Library/Application Support/Granola/cache-v4.json"
-  ),
-  join(
-    homedir(),
-    "Library/Application Support/Granola/cache-v3.json"
-  ),
-];
+const CACHE_DIR = join(homedir(), "Library/Application Support/Granola");
 
 let cachedState: CacheState | null = null;
 
 function findCacheFile(): string | null {
-  for (const p of CACHE_PATHS) {
-    if (Bun.file(p).size > 0) return p;
-  }
+  // Find all cache-vN.json files and pick the highest version
+  const { readdirSync } = require("fs");
+  try {
+    const files: string[] = readdirSync(CACHE_DIR);
+    const versions = files
+      .map((f: string) => f.match(/^cache-v(\d+)\.json$/))
+      .filter(Boolean)
+      .map((m: RegExpMatchArray) => parseInt(m[1], 10))
+      .sort((a: number, b: number) => b - a);
+
+    for (const v of versions) {
+      const p = join(CACHE_DIR, `cache-v${v}.json`);
+      if (Bun.file(p).size > 0) return p;
+    }
+  } catch {}
   return null;
 }
 

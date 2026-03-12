@@ -21,7 +21,7 @@ export function registerShowCommand(program: Command) {
       const context = {
         id: meeting.id,
         title: meeting.title,
-        created_at: meeting.created_at,
+        time: meeting.calendar_event?.start?.dateTime || meeting.created_at,
         attendees: meeting.attendees,
       };
 
