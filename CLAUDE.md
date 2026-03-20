@@ -31,7 +31,7 @@ granola show <id> --transcript        # Just the transcript (if available)
 
 ## Data Source
 
-Reads `~/Library/Application Support/Granola/cache-v4.json` (falls back to v3). No API calls, no auth needed. Data is as fresh as the last time Granola synced.
+Auto-detects the highest cache version at `~/Library/Application Support/Granola/cache-vN.json` (currently v6). No API calls, no auth needed. Data is as fresh as the last time Granola synced.
 
 ## Development
 

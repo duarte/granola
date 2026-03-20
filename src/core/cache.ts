@@ -32,10 +32,11 @@ export interface Meeting {
 export interface TranscriptUtterance {
   text: string;
   source: string;
-  start_time?: number;
-  end_time?: number;
   start_timestamp?: string;
   end_timestamp?: string;
+  id?: string;
+  document_id?: string;
+  is_final?: boolean;
 }
 
 // --- Raw cache types ---

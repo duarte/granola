@@ -32,7 +32,8 @@ export function registerShowCommand(program: Command) {
         }
         if (getMode() === "human") {
           for (const u of meeting.transcript) {
-            console.log(`[${u.source}] ${u.text}`);
+            const label = u.source === "microphone" ? "me" : u.source === "system" ? "them" : u.source;
+            console.log(`[${label}] ${u.text}`);
           }
         } else {
           output({ ...context, transcript: meeting.transcript });

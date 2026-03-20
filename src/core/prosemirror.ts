@@ -46,7 +46,13 @@ function renderNodes(nodes: PMNode[], depth: number): string {
         if (depth === 0) result += "\n";
         break;
       }
-      case "listItem": {
+      case "taskList": {
+        result += renderList(node.content, depth, "task");
+        if (depth === 0) result += "\n";
+        break;
+      }
+      case "listItem":
+      case "taskItem": {
         // Handled by renderList
         break;
       }
@@ -87,16 +93,22 @@ function renderNodes(nodes: PMNode[], depth: number): string {
 function renderList(
   items: PMNode[] | undefined,
   depth: number,
-  type: "bullet" | "ordered"
+  type: "bullet" | "ordered" | "task"
 ): string {
   if (!items) return "";
   let result = "";
   let index = 1;
 
   for (const item of items) {
-    if (item.type !== "listItem") continue;
+    if (item.type !== "listItem" && item.type !== "taskItem") continue;
     const indent = "  ".repeat(depth);
-    const marker = type === "bullet" ? "-" : `${index}.`;
+    let marker: string;
+    if (type === "task") {
+      const checked = item.attrs?.checked ? "x" : " ";
+      marker = `- [${checked}]`;
+    } else {
+      marker = type === "bullet" ? "-" : `${index}.`;
+    }
 
     const children = item.content || [];
     let firstLine = true;
@@ -112,10 +124,12 @@ function renderList(
         }
       } else if (
         child.type === "bulletList" ||
-        child.type === "orderedList"
+        child.type === "orderedList" ||
+        child.type === "taskList"
       ) {
         const subType =
-          child.type === "bulletList" ? "bullet" : "ordered";
+          child.type === "bulletList" ? "bullet" :
+          child.type === "orderedList" ? "ordered" : "task";
         result += renderList(child.content, depth + 1, subType);
       } else if (child.content) {
         result += renderNodes([child], depth + 1);
