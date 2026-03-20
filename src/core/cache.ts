@@ -34,6 +34,8 @@ export interface TranscriptUtterance {
   source: string;
   start_time?: number;
   end_time?: number;
+  start_timestamp?: string;
+  end_timestamp?: string;
 }
 
 // --- Raw cache types ---
@@ -72,7 +74,7 @@ interface RawTranscript {
 
 interface CacheState {
   documents: Record<string, RawDocument>;
-  transcripts: Record<string, RawTranscript>;
+  transcripts: Record<string, RawTranscript | TranscriptUtterance[]>;
 }
 
 // --- Cache reading ---
@@ -163,7 +165,10 @@ export function getMeetings(): Meeting[] {
       }
     }
 
-    const transcript = state.transcripts[doc.id]?.utterances || null;
+    const rawTranscript = state.transcripts[doc.id];
+    const transcript = Array.isArray(rawTranscript)
+      ? rawTranscript
+      : rawTranscript?.utterances || null;
 
     // Fall back to ProseMirror conversion when notes_markdown is empty
     let notesMarkdown = doc.notes_markdown || "";

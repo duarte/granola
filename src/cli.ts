@@ -9,7 +9,7 @@ export function createProgram(): Command {
   program
     .name("granola")
     .description("CLI for Granola meeting notes — designed for LLM consumption")
-    .version("1.2.0", "-v, --version")
+    .version("1.2.1", "-v, --version")
     .option("--json", "JSON output (default)")
     .option("--pretty", "Pretty-printed JSON")
     .option("--human", "Human-readable output")
